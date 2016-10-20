@@ -20,7 +20,7 @@
         buy()
         sell()
     - XASessionEvents
-    - XASessionEvents
+    - XAQueryEvents
 4. function list
     - login_process(demo = False)
     - stock_quotation(codes)
