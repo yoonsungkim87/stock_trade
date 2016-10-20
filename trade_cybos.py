@@ -264,8 +264,8 @@ def dump_all(wallet):
     for k in wallet.keys():
         cybos_sell(k, wallet[k][0])
     wallet.clear()
-
-if __name__ == "__main__":
+    
+def main():
         
     #init
     inCpTdUtil.TradeInit(0)
@@ -322,3 +322,6 @@ if __name__ == "__main__":
 
         s = ''.join(str_list)
         f.write(s)
+
+if __name__ == "__main__":
+    main()
