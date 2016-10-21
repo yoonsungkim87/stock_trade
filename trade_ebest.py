@@ -53,26 +53,27 @@ import sys
 import signal
 import numpy as np
 
-TV01 = 1
-TV02 = 340
-TV03 = 30
-TV04 = 30
-TV05 = [35,100]
-TV06 = 30
-TV07 = 31
-TV08 = 30
-TV09 = 2
-TV10 = [97,100]
-TV11 = 400
-TV12 = 408
-TV13 = 884
-TV14 = 306
-TV15 = 0
 
-LE01 = 1190
-LE02 = 340
-LE03 = 60
+# Tuning values are listed.
+tun_val_01 = 1
+tun_val_02 = 340
+tun_val_03 = 30
+tun_val_04 = 30
+tun_val_05 = [35,100]
+tun_val_06 = 30
+tun_val_07 = 31
+tun_val_08 = 30
+tun_val_09 = 2
+tun_val_10 = [97,100]
+tun_val_11 = 400
+tun_val_12 = 408
+tun_val_13 = 884
+tun_val_14 = 306
+tun_val_15 = 0
 
+min_leng = 1190
+
+# For certification
 certi_pass = ''
 identification = ''
 password = ''
@@ -91,9 +92,9 @@ class Stock:
     buy_flag = False
     def __init__(self, code):
         self.code = code
-        self.price = [None] * LE01
-        self.quantity = [None] * LE02
-        self.strength = [None] * LE03
+        self.price = [None] * min_leng
+        self.quantity = [None] * min_leng
+        self.strength = [None] * min_leng
     def ucode(self, code):
         self.code = code
     def uname(self, name):
@@ -318,7 +319,7 @@ def checker(stock_object, end_hour = 15, end_minute = 35):
         #selling logic
     for stock in stock_object:
         if ((stock.buy_flag)&(not(stock.on_trade))):
-            det1 = TV10[0] * stock.b_price >= TV10[1] * stock.price[-1]
+            det1 = tun_val_10[0] * stock.b_price >= tun_val_10[1] * stock.price[-1]
             det2 = (400 * (max(1) - 1) >= 1)
             det3 = (1 <= 0)
             if(any([det1,det2,det3])):
@@ -329,13 +330,13 @@ def checker(stock_object, end_hour = 15, end_minute = 35):
         if not(any(p is None for p in stock.price)):
             if (not(stock.buy_flag)&(not(stock.on_trade))):
                 det1 = 100 * (
-                    (stock.quantity[-1] - stock.quantity[-TV03]) / TV03 
-                    - (stock.quantity[-TV04] - stock.quantity[-TV04-TV03]) / TV03
-                ) > TV01 * (stock.quantity[-1] - stock.quantity[-TV02])
-                det2 = TV05[1] * (
-                    np.mean(stock.strength[-TV06:]) - np.mean(stock.strength[-TV07-TV08:-TV07])
-                ) > TV05[0]
-                det3 = stock.residual_sq[-1] > TV09 * stock.residual_bq[-1]
+                    (stock.quantity[-1] - stock.quantity[-tun_val_03]) / tun_val_03 
+                    - (stock.quantity[-tun_val_04] - stock.quantity[-tun_val_04-tun_val_03]) / tun_val_03
+                ) > tun_val_01 * (stock.quantity[-1] - stock.quantity[-tun_val_02])
+                det2 = tun_val_05[1] * (
+                    np.mean(stock.strength[-tun_val_06:]) - np.mean(stock.strength[-tun_val_07-tun_val_08:-tun_val_07])
+                ) > tun_val_05[0]
+                det3 = stock.residual_sq[-1] > tun_val_09 * stock.residual_bq[-1]
                 if(all([det1,det2,det3])):
                     pass
                 
