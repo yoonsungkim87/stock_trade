@@ -101,10 +101,16 @@ class Stock:
         self.name = name
     def uprice(self, price):
         self.price.append(int(price))
+        if self.price[0] is None:
+            self.price.pop(0)
     def uquant(self, quantity):
         self.quantity.append(int(quantity))
+        if self.quantity[0] is None:
+            self.quantity.pop(0)
     def ustren(self,strength):
         self.strength.append(float(strength))
+        if self.strength[0] is None:
+            self.strength.pop(0)
     def uressq(self,residual_sq):
         self.residual_sq = int(residual_sq)
     def uresbq(self,residual_bq):
@@ -327,7 +333,7 @@ def checker(stock_object, end_hour = 15, end_minute = 35):
 
             #buying logic
     for stock in stock_object:
-        if not(any(p is None for p in stock.price)):
+        if not(stock.price[0] is None):
             if (not(stock.buy_flag)&(not(stock.on_trade))):
                 det1 = 100 * (
                     (stock.quantity[-1] - stock.quantity[-tun_val_03]) / tun_val_03 
