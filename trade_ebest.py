@@ -61,15 +61,13 @@ tun_val_03 = 30
 tun_val_04 = 30
 tun_val_05 = [35,100]
 tun_val_06 = 30
-tun_val_07 = 31
-tun_val_08 = 30
-tun_val_09 = 2
-tun_val_10 = [97,100]
-tun_val_11 = 400
-tun_val_12 = 408
-tun_val_13 = 884
-tun_val_14 = 306
-tun_val_15 = 0
+tun_val_07 = 2
+tun_val_08 = [97,100]
+tun_val_09 = 400
+tun_val_10 = 408
+tun_val_11 = 884
+tun_val_12 = 306
+tun_val_13 = 0
 
 min_leng = 1190
 
@@ -340,7 +338,7 @@ def checker(stock_object, end_hour = 15, end_minute = 35):
                     - (stock.quantity[-tun_val_04] - stock.quantity[-tun_val_04-tun_val_03]) / tun_val_03
                 ) > tun_val_01 * (stock.quantity[-1] - stock.quantity[-tun_val_02])
                 det2 = tun_val_05[1] * (
-                    np.mean(stock.strength[-tun_val_06:]) - np.mean(stock.strength[-tun_val_07-tun_val_08:-tun_val_07])
+                    np.mean(stock.strength[-tun_val_06:]) - np.mean(stock.strength[-2*tun_val_06:-tun_val_06])
                 ) > tun_val_05[0]
                 det3 = stock.residual_sq[-1] > tun_val_09 * stock.residual_bq[-1]
                 if(all([det1,det2,det3])):
