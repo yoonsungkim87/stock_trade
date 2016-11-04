@@ -69,7 +69,7 @@ tun_val_11 = 884
 tun_val_12 = 306
 tun_val_13 = 0
 
-min_leng = 1190
+min_leng = 1200
 
 # For certification
 certi_pass = ''
@@ -77,22 +77,19 @@ identification = ''
 password = ''
 
 class Stock:
-    code = None
-    name = None
-    price = None
-    quantity = None
-    strength = None
-    residual_sq = None
-    residual_bq = None
-    b_time = None
-    b_price = None
-    on_trade = False
-    buy_flag = False
     def __init__(self, code):
         self.code = code
         self.price = [None] * min_leng
         self.quantity = [None] * min_leng
         self.strength = [None] * min_leng
+        self.name = None
+        self.residual_sq = None
+        self.residual_bq = None
+        self.b_time = None
+        self.b_price = None
+        self.on_trade = False
+        self.buy_flag = False
+        self.maxOSC = -10000
     def ucode(self, code):
         self.code = code
     def uname(self, name):
@@ -121,18 +118,42 @@ class Stock:
         self.on_trade = on_trade
     def ubuyfl(self,buy_flag):
         self.buy_flag = buy_flag
+    def uMaxOSC(self,maxOSC):
+        self.maxOSC = maxOSC
     funcmap = {
         1:ucode,2:uname,3:uprice,4:uquant,5:ustren,
         6:uressq,7:uresbq,8:ubtime,9:ubpric,10:uontra,
-        11:ubuyfl
+        11:ubuyfl,12:uMaxOSC
     }
     def update(self, dic):
         for key in dic.keys():
             self.funcmap[key](self,dic[key])
+            
     def buy():
         pass
     def sell():
         pass
+    
+    def MACD(self, d):
+        if not(self.price[0] is None):
+            if d == 0:
+                return np.mean(self.price[-tun_val_10:]) - np.mean(self.price[-tun_val_11:])
+            if d > 0:
+                return np.mean(self.price[-tun_val_10-d:-d]) - np.mean(self.price[-tun_val_11-d:-d])
+        else:
+            return None
+    @property
+    def signal(self):
+        if not(self.price[0] is None):
+            return np.mean([self.MACD(d = l) for l in range(tun_val_12)])
+        else:
+            return None
+    @property
+    def OSC(self):
+        if not(self.price[0] is None):
+            return self.MACD(d=0) - self.signal
+        else:
+            return None
     
 class XASessionEvents:
     logInState = 0
