@@ -89,7 +89,7 @@ class Stock:
         self.b_price = None
         self.on_trade = False
         self.buy_flag = False
-        self.maxOSC = -10000
+        self.maxosc = -10000
     def ucode(self, code):
         self.code = code
     def uname(self, name):
@@ -118,12 +118,12 @@ class Stock:
         self.on_trade = on_trade
     def ubuyfl(self,buy_flag):
         self.buy_flag = buy_flag
-    def uMaxOSC(self,maxOSC):
-        self.maxOSC = maxOSC
+    def umaxosc(self,maxosc):
+        self.maxosc = maxosc
     funcmap = {
         1:ucode,2:uname,3:uprice,4:uquant,5:ustren,
         6:uressq,7:uresbq,8:ubtime,9:ubpric,10:uontra,
-        11:ubuyfl,12:uMaxOSC
+        11:ubuyfl,12:umaxosc
     }
     def update(self, dic):
         for key in dic.keys():
@@ -134,7 +134,7 @@ class Stock:
     def sell():
         pass
     
-    def MACD(self, d):
+    def macd(self, d):
         if not(self.price[0] is None):
             if d == 0:
                 return np.mean(self.price[-tun_val_10:]) - np.mean(self.price[-tun_val_11:])
@@ -145,13 +145,13 @@ class Stock:
     @property
     def signal(self):
         if not(self.price[0] is None):
-            return np.mean([self.MACD(d = l) for l in range(tun_val_12)])
+            return np.mean([self.macd(d = l) for l in range(tun_val_12)])
         else:
             return None
     @property
-    def OSC(self):
+    def osc(self):
         if not(self.price[0] is None):
-            return self.MACD(d=0) - self.signal
+            return self.macd(d=0) - self.signal
         else:
             return None
     
@@ -344,11 +344,16 @@ def checker(stock_object, end_hour = 15, end_minute = 35):
         #selling logic
     for stock in stock_object:
         if ((stock.buy_flag)&(not(stock.on_trade))):
-            det1 = tun_val_10[0] * stock.b_price >= tun_val_10[1] * stock.price[-1]
-            det2 = (400 * (max(1) - 1) >= 1)
-            det3 = (1 <= 0)
+            det1 = tun_val_08[0] * stock.b_price >= tun_val_08[1] * stock.price[-1]
+            stock.maxosc = stock.osc if (stock.maxosc < stock.osc) else stock.maxosc
+            det2 = (tun_val_09 * (stock.maxosc - stock.osc) >= stock.price[-1])
+            det3 = (stock.osc <= tun_val_13)
             if(any([det1,det2,det3])):
-                pass
+                s1 = "%02d:%02d" % (h,m)
+                s2 = str(stock.code)
+                s3 = str(stock.price[-1])
+                f.write(s1+'-'+s2+'-'+s3+'|')
+                f_trade.write()
 
             #buying logic
     for stock in stock_object:
@@ -361,7 +366,7 @@ def checker(stock_object, end_hour = 15, end_minute = 35):
                 det2 = tun_val_05[1] * (
                     np.mean(stock.strength[-tun_val_06:]) - np.mean(stock.strength[-2*tun_val_06:-tun_val_06])
                 ) > tun_val_05[0]
-                det3 = stock.residual_sq[-1] > tun_val_09 * stock.residual_bq[-1]
+                det3 = stock.residual_sq[-1] > tun_val_07 * stock.residual_bq[-1]
                 if(all([det1,det2,det3])):
                     pass
                 
