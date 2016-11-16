@@ -339,7 +339,7 @@ def starter(start_hour = 8, start_minute = 55):
 
 def checker(stock_object, end_hour = 15, end_minute = 35):
     current_time = datetime.now()
-    h, m = current_time.hour, current_time.minute
+    h, m, s = current_time.hour, current_time.minute, current_time.microsecond
     
         #selling logic
     for stock in stock_object:
@@ -350,7 +350,7 @@ def checker(stock_object, end_hour = 15, end_minute = 35):
             det3 = (stock.osc <= tun_val_13)
             if(any([det1,det2,det3])):
                 stock.buy_flag = False
-                s1 = "%02d:%02d:%02d" % (h,m,current_time.microsecond)
+                s1 = "%02d:%02d:%02d" % (h,m,s)
                 s2 = str(stock.code)
                 s3 = str(stock.name)
                 s4 = str(stock.price[-1])
@@ -370,7 +370,7 @@ def checker(stock_object, end_hour = 15, end_minute = 35):
                 det3 = stock.residual_sq[-1] > tun_val_07 * stock.residual_bq[-1]
                 if(all([det1,det2,det3])):
                     stock.buy_flag = True
-                    s1 = "%02d:%02d:%02d" % (h,m,current_time.microsecond)
+                    s1 = "%02d:%02d:%02d" % (h,m,s)
                     s2 = str(stock.code)
                     s3 = str(stock.name)
                     s4 = str(stock.price[-1])
