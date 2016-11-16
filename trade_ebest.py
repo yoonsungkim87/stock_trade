@@ -349,11 +349,12 @@ def checker(stock_object, end_hour = 15, end_minute = 35):
             det2 = (tun_val_09 * (stock.maxosc - stock.osc) >= stock.price[-1])
             det3 = (stock.osc <= tun_val_13)
             if(any([det1,det2,det3])):
-                s1 = "%02d:%02d" % (h,m)
+                stock.buy_flag = False
+                s1 = "%02d:%02d:%02d" % (h,m,current_time.microsecond)
                 s2 = str(stock.code)
-                s3 = str(stock.price[-1])
-                f.write(s1+'-'+s2+'-'+s3+'|')
-                f_trade.write()
+                s3 = str(stock.name)
+                s4 = str(stock.price[-1])
+                f_trade.write(s1+'-'+s2+'-'+s3+'-'+s4+'-sell|')
 
             #buying logic
     for stock in stock_object:
@@ -368,7 +369,12 @@ def checker(stock_object, end_hour = 15, end_minute = 35):
                 ) > tun_val_05[0]
                 det3 = stock.residual_sq[-1] > tun_val_07 * stock.residual_bq[-1]
                 if(all([det1,det2,det3])):
-                    pass
+                    stock.buy_flag = True
+                    s1 = "%02d:%02d:%02d" % (h,m,current_time.microsecond)
+                    s2 = str(stock.code)
+                    s3 = str(stock.name)
+                    s4 = str(stock.price[-1])
+                    f_trade.write(s1+'-'+s2+'-'+s3+'-'+s4+'-buy|')
                 
     return not(((h == end_hour)&(m >= end_minute))|(h > end_hour))
 
