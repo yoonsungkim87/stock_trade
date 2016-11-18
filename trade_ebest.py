@@ -282,13 +282,7 @@ def starter(start_hour = 8, start_minute = 55):
         
     #create file with "current time" name.
     current_time = datetime.now()
-    s = "%04d_%02d_%02d_%02d_%02d_%02d" % (current_time.year,
-                                           current_time.month,
-                                           current_time.day,
-                                           current_time.hour,
-                                           current_time.minute,
-                                           current_time.microsecond)
-    
+    s = str(current_time)    
     global f, f_trade
     f = open(s+'.txt','w')
     f_trade = open(s+'_trade.txt','w')
