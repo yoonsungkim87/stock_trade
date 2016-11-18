@@ -1,46 +1,4 @@
 #-*- coding: utf-8 -*-
-'''
-
-1. import list
-2. tuning values
-3. classes
-    - Stock
-        ucode(self, code)
-        uname(self, name)
-        uprice(self, price)
-        uquant(self, quantity)
-        ustren(self,strength)
-        uressq(self,residual_sq)
-        uresbq(self,residual_bq)
-        ubtime(self,b_time)
-        ubpric(self,b_price)
-        uontra(self,on_trade)
-        ubuyfl(self,buy_flag)
-        update(self, dic)
-        buy()
-        sell()
-    - XASessionEvents
-    - XAQueryEvents
-4. function list
-    - login_process(demo = False)
-    - stock_quotation(codes)
-    - get_top_trade_cost(field = 1, day = 0)
-    - get_top_trade_volume(field = 1, day = 0)
-    - get_server_time()
-    - parse(addr, ident, with_a = 1)
-    - get_current_time()
-    - starter(start_hour = 8, start_minute = 55)
-    - checker(stock_object, end_hour = 15, end_minute = 35)
-    - finisher()
-    - signal_handler(signal, frame)
-    - system_init()
-    - pre_filter(i_temp, max_length = 50, min_price = 1000, max_price = 10000)
-    - group_update(code_pointer, class_pointer, init = False, time_interval = None)
-    - group_display_and_print(code_pointer, class_pointer, length = 3, with_print = True)
-    - main()
-5. main function
-
-'''
 
 import win32com.client
 import pythoncom
@@ -70,11 +28,6 @@ tun_val_12 = 306
 tun_val_13 = 0
 
 min_leng = 1200
-
-# For certification
-certi_pass = ''
-identification = ''
-password = ''
 
 class Stock:
     def __init__(self, code):
@@ -184,12 +137,14 @@ def login_process(demo = False):
         user_certificate_pass = None
     else:
         server_addr = "hts.ebestsec.co.kr"
-        user_certificate_pass = certi_pass
+        #specify certificate password
+        user_certificate_pass = ""
     
     server_port = 20001
     server_type = 0
-    user_id = identification
-    user_pass = password
+    #specify id & password
+    user_id = ""
+    user_pass = ""
 
     inXASession = win32com.client.DispatchWithEvents("XA_Session.XASession", XASessionEvents)
     inXASession.ConnectServer(server_addr, server_port)
@@ -313,6 +268,7 @@ def parse(addr, ident, with_a = 1):
                 return_list.append(r.group(1))
     return return_list
 
+#this function is useless. this has to be deleted.
 def get_current_time():
     return datetime.now()
 
@@ -337,11 +293,11 @@ def starter(start_hour = 8, start_minute = 55):
     f = open(s+'.txt','w')
     f_trade = open(s+'_trade.txt','w')
 
-def checker(stock_object, end_hour = 15, end_minute = 35):
+def checker(stock_object, end_hour = 13, end_minute = 35):
     current_time = datetime.now()
     h, m, s = current_time.hour, current_time.minute, current_time.microsecond
     
-        #selling logic
+    #selling logic
     for stock in stock_object:
         if ((stock.buy_flag)&(not(stock.on_trade))):
             det1 = tun_val_08[0] * stock.b_price >= tun_val_08[1] * stock.price[-1]
@@ -350,13 +306,15 @@ def checker(stock_object, end_hour = 15, end_minute = 35):
             det3 = (stock.osc <= tun_val_13)
             if(any([det1,det2,det3])):
                 stock.buy_flag = False
-                s1 = "%02d:%02d:%02d" % (h,m,s)
+                stock.on_trade = True
+                stock.b_price = None
+                s1 = str(current_time)
                 s2 = str(stock.code)
-                s3 = str(stock.name)
+                s3 = str(stock.name.encode('euc-kr'))
                 s4 = str(stock.price[-1])
-                f_trade.write(s1+'-'+s2+'-'+s3+'-'+s4+'-sell|')
+                f_trade.write(s1+'-'+s2+'-'+s3+'-'+s4+'-sell\n')
 
-            #buying logic
+    #buying logic
     for stock in stock_object:
         if not(stock.price[0] is None):
             if (not(stock.buy_flag)&(not(stock.on_trade))):
@@ -367,14 +325,15 @@ def checker(stock_object, end_hour = 15, end_minute = 35):
                 det2 = tun_val_05[1] * (
                     np.mean(stock.strength[-tun_val_06:]) - np.mean(stock.strength[-2*tun_val_06:-tun_val_06])
                 ) > tun_val_05[0]
-                det3 = stock.residual_sq[-1] > tun_val_07 * stock.residual_bq[-1]
+                det3 = stock.residual_sq > tun_val_07 * stock.residual_bq
                 if(all([det1,det2,det3])):
                     stock.buy_flag = True
-                    s1 = "%02d:%02d:%02d" % (h,m,s)
+                    stock.b_price = stock.price[-1]
+                    s1 = str(current_time)
                     s2 = str(stock.code)
-                    s3 = str(stock.name)
+                    s3 = str(stock.name.encode('euc-kr'))
                     s4 = str(stock.price[-1])
-                    f_trade.write(s1+'-'+s2+'-'+s3+'-'+s4+'-buy|')
+                    f_trade.write(s1+'-'+s2+'-'+s3+'-'+s4+'-buy\n')
                 
     return not(((h == end_hour)&(m >= end_minute))|(h > end_hour))
 
