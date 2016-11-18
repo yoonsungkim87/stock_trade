@@ -293,7 +293,7 @@ def starter(start_hour = 8, start_minute = 55):
     f = open(s+'.txt','w')
     f_trade = open(s+'_trade.txt','w')
 
-def checker(stock_object, end_hour = 13, end_minute = 35):
+def checker(stock_object, end_hour = 15, end_minute = 35):
     current_time = datetime.now()
     h, m, s = current_time.hour, current_time.minute, current_time.microsecond
     
