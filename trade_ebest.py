@@ -292,12 +292,13 @@ def starter(start_hour = 8, start_minute = 55):
     f = open(s+'.txt','w')
     f_trade = open(s+'_trade.txt','w')
 
-def checker(stock_object, end_hour = 15, end_minute = 35):
+def checker(end_hour = 15, end_minute = 35):
+    global stocks
     current_time = datetime.now()
     h, m, s = current_time.hour, current_time.minute, current_time.microsecond
     
     #selling logic
-    for stock in stock_object:
+    for stock in stocks:
         if ((stock.buy_flag)&(not(stock.on_trade))):
             det1 = tun_val_08[0] * stock.b_price >= tun_val_08[1] * stock.price[-1]
             stock.maxosc = stock.osc if (stock.maxosc < stock.osc) else stock.maxosc
@@ -314,7 +315,7 @@ def checker(stock_object, end_hour = 15, end_minute = 35):
                 f_trade.write(s1+'-'+s2+'-'+s3+'-'+s4+'-sell\n')
 
     #buying logic
-    for stock in stock_object:
+    for stock in stocks:
         if not(stock.price[0] is None):
             if (not(stock.buy_flag)&(not(stock.on_trade))):
                 det1 = 100 * (
@@ -472,7 +473,7 @@ def main():
     group_display_and_print(codes, stocks)
 
     #trade and archive
-    while checker(stock_object = stocks):
+    while checker():
         group_update(codes, stocks, time_interval = 1)
         group_display_and_print(codes, stocks)
 
