@@ -68,9 +68,9 @@ class Stock:
     def ubpric(self,b_price):
         self.b_price = b_price
     def uontra(self,on_trade):
-        self.on_trade = on_trade
+        self.on_trade = not(self.on_trade)
     def ubuyfl(self,buy_flag):
-        self.buy_flag = buy_flag
+        self.buy_flag = not(self.buy_flag)
     def umaxosc(self,maxosc):
         self.maxosc = maxosc
     funcmap = {
@@ -137,12 +137,10 @@ def login_process(demo = False):
         user_certificate_pass = None
     else:
         server_addr = "hts.ebestsec.co.kr"
-        #specify certificate password
         user_certificate_pass = ""
     
     server_port = 20001
     server_type = 0
-    #specify id & password
     user_id = ""
     user_pass = ""
 
@@ -292,48 +290,44 @@ def starter(start_hour = 8, start_minute = 55):
     f = open(s+'.txt','w')
     f_trade = open(s+'_trade.txt','w')
 
-def checker(end_hour = 15, end_minute = 35):
-    global stocks
+def checker(class_pointer, end_hour = 15, end_minute = 35):
     current_time = datetime.now()
     h, m, s = current_time.hour, current_time.minute, current_time.microsecond
     
-    #selling logic
-    for stock in stocks:
-        if ((stock.buy_flag)&(not(stock.on_trade))):
+    for stock in class_pointer:
+        #selling logic
+        if stock.buy_flag and not stock.on_trade:
             det1 = tun_val_08[0] * stock.b_price >= tun_val_08[1] * stock.price[-1]
             stock.maxosc = stock.osc if (stock.maxosc < stock.osc) else stock.maxosc
             det2 = (tun_val_09 * (stock.maxosc - stock.osc) >= stock.price[-1])
             det3 = (stock.osc <= tun_val_13)
             if(any([det1,det2,det3])):
-                stock.buy_flag = False
-                stock.on_trade = True
-                stock.b_price = None
+                dic = {9:None,10:None,11:None, 12:-10000}
+                stock.update(dic)
                 s1 = str(current_time)
                 s2 = str(stock.code)
                 s3 = str(stock.name.encode('euc-kr'))
                 s4 = str(stock.price[-1])
                 f_trade.write(s1+'-'+s2+'-'+s3+'-'+s4+'-sell\n')
 
-    #buying logic
-    for stock in stocks:
-        if not(stock.price[0] is None):
-            if (not(stock.buy_flag)&(not(stock.on_trade))):
-                det1 = 100 * (
-                    (stock.quantity[-1] - stock.quantity[-tun_val_03]) / tun_val_03 
-                    - (stock.quantity[-tun_val_04] - stock.quantity[-tun_val_04-tun_val_03]) / tun_val_03
-                ) > tun_val_01 * (stock.quantity[-1] - stock.quantity[-tun_val_02])
-                det2 = tun_val_05[1] * (
-                    np.mean(stock.strength[-tun_val_06:]) - np.mean(stock.strength[-2*tun_val_06:-tun_val_06])
-                ) > tun_val_05[0]
-                det3 = stock.residual_sq > tun_val_07 * stock.residual_bq
-                if(all([det1,det2,det3])):
-                    stock.buy_flag = True
-                    stock.b_price = stock.price[-1]
-                    s1 = str(current_time)
-                    s2 = str(stock.code)
-                    s3 = str(stock.name.encode('euc-kr'))
-                    s4 = str(stock.price[-1])
-                    f_trade.write(s1+'-'+s2+'-'+s3+'-'+s4+'-buy\n')
+        #buying logic
+        elif stock.price[0] is not None and not stock.buy_flag and not stock.on_trade:
+            det1 = 100 * (
+                (stock.quantity[-1] - stock.quantity[-tun_val_03]) / tun_val_03 
+                - (stock.quantity[-tun_val_04] - stock.quantity[-tun_val_04-tun_val_03]) / tun_val_03
+            ) > tun_val_01 * (stock.quantity[-1] - stock.quantity[-tun_val_02])
+            det2 = tun_val_05[1] * (
+                np.mean(stock.strength[-tun_val_06:]) - np.mean(stock.strength[-2*tun_val_06:-tun_val_06])
+            ) > tun_val_05[0]
+            det3 = stock.residual_sq > tun_val_07 * stock.residual_bq
+            if(all([det1,det2,det3])):
+                dic = {9:stock.price[-1],11:None}
+                stock.update(dic)
+                s1 = str(current_time)
+                s2 = str(stock.code)
+                s3 = str(stock.name.encode('euc-kr'))
+                s4 = str(stock.price[-1])
+                f_trade.write(s1+'-'+s2+'-'+s3+'-'+s4+'-buy\n')
                 
     return not(((h == end_hour)&(m >= end_minute))|(h > end_hour))
 
@@ -473,7 +467,7 @@ def main():
     group_display_and_print(codes, stocks)
 
     #trade and archive
-    while checker():
+    while checker(stocks):
         group_update(codes, stocks, time_interval = 1)
         group_display_and_print(codes, stocks)
 
