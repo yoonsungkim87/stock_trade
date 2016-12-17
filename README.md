@@ -1,11 +1,11 @@
 # Overview
-This code is based on KRX(Korea Exchange) trade system. For trading convenience, user easily can define rule sets so that computer buy and sell according to them. This code suits scalping strategy well. eBest investment company uploaded their own API on their web site. (http://www.ebestsec.co.kr/)
+This code is based on KRX (Korea Exchange) trade system. For trading convenience, users easily can define rule sets so that computer buy and sell according to them. This code suits scalping strategy well. eBest investment company uploaded their own API on their web site. (http://www.ebestsec.co.kr/)
 
 # Example eBest Process Overview
 ![overview](https://github.com/yoonsungkim87/stock_trade/blob/master/stock_ebest.png)
 
 # Example Archiving Result
-Archiving process print out codes' name (up to 50) first, and then price, quantity, residual selling qunatity, residual buying qunatity, and volume power. (5 attributes) At the end of the line, time stamps will be printed for future analysis. In total, 251 attibutes recorded in a line at most (= 5attributes * 50codes[maximum case] + 1time stamp) In the example below, '유니크' has 3550 price, 4469 cumulative volume, 0 of residual selling qunatity, residual buying qunatity, and volume power at 2016-12-16 08:55:16.433000.
+Archiving process print out codes' name (up to 50) first, and then price, quantity, residual selling quantity, residual buying quantity, volume-power. (5 attributes) At the end of the line, timestamps will be printed for future analysis. In total, 251 attributes recorded in a line at most (= 5attributes * 50codes [maximum case] + 1time stamp) In the example below, '유니크' has 3550 prices, 4469 cumulative volumes, 0 of residual selling quantity, residual buying quantity, and volume power at 2016-12-16 08:55:16.433000.
 ```
 유니크|동국실업|광림|CJ씨푸드|KODEX 200선물인버스2|삼화페인트|옵트론텍|알루코|해마로푸드서비스|대성파인텍|광진윈텍|손오공|TIGER 200선물인버스2|흥국화재|골든센츄리|한탑|동화약품|KODEX 코스닥150 레버|서연탑메탈|네이처셀|유유제약|유유제약1우|삼일제약|홈센타홀딩스|솔고바이오|파인디앤씨|좋은사람들|쌍방울|진양제약|대원강업|썬코어|티플랙스|한창|팬오션|신라섬유|케이탑리츠|DSR제강|세우글로벌|씨씨에스|피제이전자|원풍물산|아비스타|카프로|썬텍|텔콘|지엔코|파루|SK증권|대신정보통신|한국팩키지|
 3550|4469|0|0|0.0|2725|1400|0|0|0.0|7600|4914|0|0|0.0|3635|1000|0|0|0.0|9520|55|0|0|0.0|9990|0|0|0|0.0|5560|5834|0|0|0.0|5160|8527|0|0|0.0|1935|3706|0|0|0.0|2735|5808|0|0|0.0|5450|3364|0|0|0.0|6590|512|0|0|0.0|9555|600|0|0|0.0|3615|0|0|0|0.0|6780|200|0|0|0.0|2245|0|0|0|0.0|7940|0|0|0|0.0|8195|3633|0|0|0.0|9510|11132|0|0|0.0|4660|500|0|0|0.0|9350|0|0|0|0.0|5760|0|0|0|0.0|8090|0|0|0|0.0|4810|37454|0|0|0.0|1040|3118|0|0|0.0|8390|11|0|0|0.0|2460|25545|0|0|0.0|2030|780|0|0|0.0|4830|0|0|0|0.0|4135|0|0|0|0.0|4050|38766|0|0|0.0|2425|3803|0|0|0.0|5950|3388|0|0|0.0|3800|8715|0|0|0.0|2480|0|0|0|0.0|1900|3000|0|0|0.0|8750|2261|0|0|0.0|2025|32282|0|0|0.0|2300|5178|0|0|0.0|7650|0|0|0|0.0|3405|99|0|0|0.0|1055|1102|0|0|0.0|5980|1287|0|0|0.0|2830|8370|0|0|0.0|4230|10|0|0|0.0|8100|1266|0|0|0.0|4290|0|0|0|0.0|1055|1133|0|0|0.0|2945|16893|0|0|0.0|3495|14972|0|0|0.0|2016-12-16 08:55:16.433000
@@ -13,7 +13,7 @@ Archiving process print out codes' name (up to 50) first, and then price, quanti
 ```
 
 # Example Simulation Trade Result
-When you apply your strategy to real trade market, it is kind of burden for user to spend money for testing. To prevent this, user can simulate result according to those rule sets which user defines. In the example below, '한국팩키지' is bought with price of 3535 (first line), and sold at 3560 (fourth line).
+When you apply your strategy to real trade market, it is kind of burden for users to spend money for testing. To prevent this, users can simulate result, according to those rule sets which user defines. In the example below, '한국팩키지' is bought with a price of 3535 (first line), and sold at 3560 (fourth line).
 ```
 2016-12-16 10:01:48.870000|037230|한국팩키지|3535|buy
 2016-12-16 10:12:07.286000|019770|서연탑메탈|9430|buy
