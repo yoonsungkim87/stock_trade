@@ -26,6 +26,8 @@ tun_val_10 = 408
 tun_val_11 = 884
 tun_val_12 = 306
 tun_val_13 = 0
+tun_val_14 = [1008, 1000]
+tun_val_15 = 30
 
 min_leng = 1200
 
@@ -306,7 +308,8 @@ def checker(class_pointer, end_hour = 15, end_minute = 35):
                 np.mean(stock.strength[-tun_val_06:]) - np.mean(stock.strength[-2*tun_val_06:-tun_val_06])
             ) > tun_val_05[0]
             bdet3 = stock.residual_sq > tun_val_07 * stock.residual_bq
-            if bdet1 and bdet2 and bdet3:
+            bdet4 = tun_val_14[1] * stock.price[-1] > tun_val_14[0] * stock.price[-tun_val_15]
+            if bdet1 and bdet2 and bdet3 and bdet4:
                 if not stock.buy_flag and not stock.on_trade:
                     bdic = {9:stock.price[-1],11:None}
                     stock.update(bdic)
@@ -314,7 +317,7 @@ def checker(class_pointer, end_hour = 15, end_minute = 35):
                     s2 = str(stock.code)
                     s3 = str(stock.name.encode('euc-kr'))
                     s4 = str(stock.price[-1])
-                    f_trade.write(s1+'-'+s2+'-'+s3+'-'+s4+'-buy\n')
+                    f_trade.write(s1+'|'+s2+'|'+s3+'|'+s4+'|buy\n')
                 
             #selling logic
             elif stock.buy_flag and not stock.on_trade:
@@ -329,7 +332,7 @@ def checker(class_pointer, end_hour = 15, end_minute = 35):
                     s2 = str(stock.code)
                     s3 = str(stock.name.encode('euc-kr'))
                     s4 = str(stock.price[-1])
-                    f_trade.write(s1+'-'+s2+'-'+s3+'-'+s4+'-sell\n')
+                    f_trade.write(s1+'|'+s2+'|'+s3+'|'+s4+'|sell\n')
                     
     return not(((h == end_hour)&(m >= end_minute))|(h > end_hour))
 
