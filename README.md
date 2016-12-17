@@ -1,5 +1,5 @@
 # Overview
-This code is based on KRX(Korea Exchange) trade system. For trading convenience, user easily can define rule sets so that computer buy and sell according to them. This code suits scalping strategy well.
+This code is based on KRX(Korea Exchange) trade system. For trading convenience, user easily can define rule sets so that computer buy and sell according to them. This code suits scalping strategy well. eBest investment company uploaded their own API on their web site. (http://www.ebestsec.co.kr/)
 
 # Example eBest Process Overview
 ![overview](https://github.com/yoonsungkim87/stock_trade/blob/master/stock_ebest.png)
