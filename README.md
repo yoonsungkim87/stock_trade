@@ -13,6 +13,7 @@ Archiving process print out codes' name (up to 50) first, and then price, quanti
 ```
 
 # Example Simulation Trade Result
+When you apply your strategy to real trade market, it is kind of burden for user to spend money for testing. To prevent this, user can simulate result according to those rule sets which user defines. In the example below, '한국팩키지' is bought with price of 3535 (first line), and sold at 3560 (fourth line).
 ```
 2016-12-16 10:01:48.870000|037230|한국팩키지|3535|buy
 2016-12-16 10:12:07.286000|019770|서연탑메탈|9430|buy
